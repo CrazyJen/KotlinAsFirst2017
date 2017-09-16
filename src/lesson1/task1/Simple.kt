@@ -70,8 +70,8 @@ fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double = 48 * 0.0
  * Пользователь задает угол в градусах, минутах и секундах (например, 36 градусов 14 минут 35 секунд).
  * Вывести значение того же угла в радианах (например, 0.63256).
  */
-fun angleInRadian(grad: Int, min: Int, sec: Int): Double = (PI * grad) / 180 + (PI * min) / (180 * 60) +
-        (PI * sec) / (180 * 3600)
+fun angleInRadian(grad: Int, min: Int, sec: Int): Double = PI * (grad / 180.0 + min / 10800.0 +
+        sec / 648000.0)
 
 /**
  * Тривиальная
@@ -98,7 +98,7 @@ fun thirdDigit(number: Int): Int = (number / 100) % 10
  * Определите время поезда в пути в минутах (в данном случае 216).
  */
 fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minutesArrive: Int): Int =
-        (hoursArrive-hoursDepart)*60+(minutesArrive-minutesDepart)
+        (hoursArrive - hoursDepart) * 60 + (minutesArrive - minutesDepart)
 
 /**
  * Простая
@@ -107,7 +107,7 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  * Сколько денег будет на счету через 3 года (с учётом сложных процентов)?
  * Например, 100 рублей под 10% годовых превратятся в 133.1 рубля
  */
-fun accountInThreeYears(initial: Int, percent: Int): Double = initial * Math.pow(1 + percent.toDouble() / 100, 3.0)
+fun accountInThreeYears(initial: Int, percent: Int): Double = initial * Math.pow(1 + percent / 100.0, 3.0)
 
 /**
  * Простая
@@ -115,4 +115,4 @@ fun accountInThreeYears(initial: Int, percent: Int): Double = initial * Math.pow
  * Пользователь задает целое трехзначное число (например, 478).
  *Необходимо вывести число, полученное из заданного перестановкой цифр в обратном порядке (например, 874).
  */
-fun numberRevert(number: Int): Int = number%10*100+number%100/10*10+number/100
+fun numberRevert(number: Int): Int = number % 10 * 100 + number % 100 / 10 * 10 + number / 100
