@@ -124,14 +124,13 @@ fun lcm(m: Int, n: Int): Int = (m * n) / gcd(m, n)
  */
 fun minDivisor(n: Int): Int {
     if (n % 2 == 0) return 2
-    var result = 0
+    var result = n
     for (i in 3..Math.sqrt(n.toDouble()).toInt())
         if (n % i == 0) {
             result = i
             break
         }
-    return if (result == 0) n
-    else result
+    return result
 }
 
 /**
@@ -139,7 +138,16 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int = TODO()
+fun maxDivisor(n: Int): Int {
+    if (n % 2 == 0) return n / 2
+    var result = 1
+    for (i in 3..Math.sqrt(n.toDouble()).toInt())
+        if (n % i == 0) {
+            result = n / i
+            break
+        }
+    return result
+}
 
 /**
  * Простая
@@ -244,7 +252,17 @@ fun hasDifferentDigits(n: Int): Boolean {
  * 149162536496481100121144...
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    val sequence = StringBuilder("")
+    var count = 1.0
+    var current: Int
+    while (sequence.length < n) {
+        current = sqr(count).toInt()
+        sequence.append("$current")
+        count++
+    }
+    return sequence.toString()[n - 1] - '0'
+}
 
 /**
  * Сложная
@@ -253,4 +271,14 @@ fun squareSequenceDigit(n: Int): Int = TODO()
  * 1123581321345589144...
  * Например, 2-я цифра равна 1, 9-я 2, 14-я 5.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    val sequence = StringBuilder("")
+    var count = 1
+    var current: Int
+    while (sequence.length < n) {
+        current = fib(count)
+        sequence.append("$current")
+        count++
+    }
+    return sequence.toString()[n - 1] - '0'
+}
