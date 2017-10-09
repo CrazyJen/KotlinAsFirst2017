@@ -80,10 +80,10 @@ fun digitNumber(n: Int): Int {
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
 fun fib(n: Int): Int {
-    var fib1: Int
-    var fib2 = 1
+    var fib1 = 1
+    var fib2 = fib1
     var fib = 1
-    if (n > 2) for (i in 3..n) {
+    for (i in 3..n) {
         fib1 = fib2
         fib2 = fib
         fib = fib1 + fib2
@@ -98,13 +98,15 @@ fun fib(n: Int): Int {
  * (Алгоритм Евклида)
  */
 fun gcd(m: Int, n: Int): Int {
-    var digit1 = m
-    var digit2 = n
+    var digit1 = maxOf(m, n)
+    var digit2 = minOf(m, n)
     while (digit1 != digit2) {
-        if (digit1 > digit2)
+        digit1 -= digit2
+        if (digit1 < digit2) {
+            digit1 += digit2
+            digit2 = digit1 - digit2
             digit1 -= digit2
-        else
-            digit2 -= digit1
+        }
     }
     return digit1
 }
@@ -123,14 +125,11 @@ fun lcm(m: Int, n: Int): Int = (m * n) / gcd(m, n)
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    if (n % 2 == 0) return 2
-    var result = n
-    for (i in 3..Math.sqrt(n.toDouble()).toInt())
-        if (n % i == 0) {
-            result = i
-            break
-        }
-    return result
+    for (i in 2..Math.round(Math.sqrt(n.toDouble())).toInt())
+        if (n % i == 0)
+            return i
+
+    return n
 }
 
 /**
@@ -139,14 +138,11 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    if (n % 2 == 0) return n / 2
-    var result = 1
-    for (i in 3..Math.sqrt(n.toDouble()).toInt())
-        if (n % i == 0) {
-            result = n / i
-            break
-        }
-    return result
+    for (i in 2..Math.round(Math.sqrt(n.toDouble())).toInt())
+        if (n % i == 0)
+            return n / i
+
+    return 1
 }
 
 /**
@@ -232,17 +228,15 @@ fun isPalindrome(n: Int): Boolean = n == revert(n)
  * Например, 54 и 323 состоят из разных цифр, а 111 и 0 из одинаковых.
  */
 fun hasDifferentDigits(n: Int): Boolean {
-    var result = false
     val lastDigit = n % 10
     var number = n / 10
     while (number > 0) {
-        if (number % 10 != lastDigit) {
-            result = true
-            break
-        }
+        if (number % 10 != lastDigit)
+            return true
+
         number /= 10
     }
-    return result
+    return false
 }
 
 /**
@@ -255,9 +249,8 @@ fun hasDifferentDigits(n: Int): Boolean {
 fun squareSequenceDigit(n: Int): Int {
     val sequence = StringBuilder("")
     var count = 1.0
-    var current: Int
     while (sequence.length < n) {
-        current = sqr(count).toInt()
+        val current = sqr(count).toInt()
         sequence.append("$current")
         count++
     }
@@ -274,9 +267,8 @@ fun squareSequenceDigit(n: Int): Int {
 fun fibSequenceDigit(n: Int): Int {
     val sequence = StringBuilder("")
     var count = 1
-    var current: Int
     while (sequence.length < n) {
-        current = fib(count)
+        val current = fib(count)
         sequence.append("$current")
         count++
     }
