@@ -101,11 +101,12 @@ fun gcd(m: Int, n: Int): Int {
     var digit1 = maxOf(m, n)
     var digit2 = minOf(m, n)
     while (digit1 != digit2) {
-        digit1 -= digit2
+        if (digit1 % digit2 == 0) return digit2
+        digit1 %= digit2
         if (digit1 < digit2) {
-            digit1 += digit2
-            digit2 = digit1 - digit2
-            digit1 -= digit2
+            val digit = digit1
+            digit1 = digit2
+            digit2 = digit
         }
     }
     return digit1
@@ -137,13 +138,7 @@ fun minDivisor(n: Int): Int {
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int {
-    for (i in 2..Math.round(Math.sqrt(n.toDouble())).toInt())
-        if (n % i == 0)
-            return n / i
-
-    return 1
-}
+fun maxDivisor(n: Int): Int = n / minDivisor(n)
 
 /**
  * Простая
@@ -247,14 +242,17 @@ fun hasDifferentDigits(n: Int): Boolean {
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  */
 fun squareSequenceDigit(n: Int): Int {
-    val sequence = StringBuilder("")
-    var count = 1.0
-    while (sequence.length < n) {
-        val current = sqr(count).toInt()
-        sequence.append("$current")
-        count++
+    var currentNumber = 1
+    var lastSequence = currentNumber
+    var sequenceLength = currentNumber
+
+    while (sequenceLength < n) {
+        currentNumber++
+        lastSequence = sqr(currentNumber.toDouble()).toInt()
+        sequenceLength += digitNumber(lastSequence)
     }
-    return sequence.toString()[n - 1] - '0'
+    lastSequence /= Math.pow(10.0, (sequenceLength - n) * 1.0).toInt()
+    return lastSequence % 10
 }
 
 /**
@@ -265,12 +263,15 @@ fun squareSequenceDigit(n: Int): Int {
  * Например, 2-я цифра равна 1, 9-я 2, 14-я 5.
  */
 fun fibSequenceDigit(n: Int): Int {
-    val sequence = StringBuilder("")
-    var count = 1
-    while (sequence.length < n) {
-        val current = fib(count)
-        sequence.append("$current")
-        count++
+    var currentNumber = 1
+    var lastSequence = currentNumber
+    var sequenceLength = currentNumber
+
+    while (sequenceLength < n) {
+        currentNumber++
+        lastSequence = fib(currentNumber)
+        sequenceLength += digitNumber(lastSequence)
     }
-    return sequence.toString()[n - 1] - '0'
+    lastSequence /= Math.pow(10.0, (sequenceLength - n) * 1.0).toInt()
+    return lastSequence % 10
 }
