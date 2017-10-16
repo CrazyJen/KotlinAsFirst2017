@@ -100,16 +100,15 @@ fun fib(n: Int): Int {
 fun gcd(m: Int, n: Int): Int {
     var digit1 = maxOf(m, n)
     var digit2 = minOf(m, n)
-    while (digit1 != digit2) {
-        if (digit1 % digit2 == 0) return digit2
-        digit1 %= digit2
+    while (digit1 % digit2 != 0) {
         if (digit1 < digit2) {
             val digit = digit1
             digit1 = digit2
             digit2 = digit
         }
+        digit1 %= digit2
     }
-    return digit1
+    return digit2
 }
 
 /**
@@ -248,10 +247,10 @@ fun squareSequenceDigit(n: Int): Int {
 
     while (sequenceLength < n) {
         currentNumber++
-        lastSequence = sqr(currentNumber.toDouble()).toInt()
+        lastSequence = currentNumber * currentNumber
         sequenceLength += digitNumber(lastSequence)
     }
-    lastSequence /= Math.pow(10.0, (sequenceLength - n) * 1.0).toInt()
+    lastSequence /= Math.pow(10.0, (sequenceLength - n).toDouble()).toInt()
     return lastSequence % 10
 }
 
@@ -272,6 +271,6 @@ fun fibSequenceDigit(n: Int): Int {
         lastSequence = fib(currentNumber)
         sequenceLength += digitNumber(lastSequence)
     }
-    lastSequence /= Math.pow(10.0, (sequenceLength - n) * 1.0).toInt()
+    lastSequence /= Math.pow(10.0, (sequenceLength - n).toDouble()).toInt()
     return lastSequence % 10
 }
