@@ -2,8 +2,6 @@
 
 package lesson3.task1
 
-import lesson1.task1.sqr
-
 /**
  * Пример
  *
@@ -101,12 +99,10 @@ fun gcd(m: Int, n: Int): Int {
     var digit1 = maxOf(m, n)
     var digit2 = minOf(m, n)
     while (digit1 % digit2 != 0) {
-        if (digit1 < digit2) {
-            val digit = digit1
-            digit1 = digit2
-            digit2 = digit
-        }
         digit1 %= digit2
+        val digit = digit1
+        digit1 = digit2
+        digit2 = digit
     }
     return digit2
 }
