@@ -225,5 +225,6 @@ class Tests {
         assertEquals("двести тысяч два", russian(200002))
         assertEquals("девятьсот тысяч", russian(900000))
         assertEquals("двенадцать", russian(12))
+        assertEquals("пятьсот двадцать одна тысяча сто семнадцать", russian(521117))
     }
 }

@@ -350,7 +350,7 @@ fun russianHelper(n: Int, thousand: Boolean): String {
 
 
     if (thousand) {
-        if (n%10 == 1) result.replace(result.length-3, result.length-2, "на")
+        if (n%10 == 1) result.replace(result.length-3, result.length-1, "на")
         if (n%10 == 2) result.replace(result.length-2, result.length-1, "е")
         val thousandEnding = when {
             n % 100 != 11 && n % 10 == 1 -> "тысяча "
