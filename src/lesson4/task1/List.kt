@@ -123,8 +123,7 @@ fun abs(v: List<Double>): Double {
  *
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
-fun mean(list: List<Double>): Double = if (list.isEmpty()) 0.0
-else list.sum() / list.size
+fun mean(list: List<Double>): Double = if (list.isEmpty()) 0.0 else list.sum() / list.size
 
 
 /**
@@ -259,6 +258,18 @@ fun convertToString(n: Int, base: Int): String {
 }
 
 /**
+ * Вспомогательная
+ *
+ * pow для Int
+ */
+fun powInt(base: Int, power: Int): Int {
+    var result = 1
+    for (i in 1..power)
+        result *= base
+    return result
+}
+
+/**
  * Средняя
  *
  * Перевести число, представленное списком цифр digits от старшей к младшей,
@@ -269,8 +280,9 @@ fun decimal(digits: List<Int>, base: Int): Int {
     var result = 0
     val length = digits.size
     for (i in digits.size - 1 downTo 0) {
-        result += digits[i] * Math.pow(base.toDouble(), (length - (i + 1)).toDouble()).toInt()
+        result += digits[i] * powInt(base, length - (i + 1))
     }
+
     return result
 }
 
@@ -301,7 +313,54 @@ fun decimalFromString(str: String, base: Int): Int {
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+fun roman(n: Int): String {
+    val list = listOf(Pair(1000, "M"), Pair(900, "CM"), Pair(500, "D"), Pair(400, "CD"), Pair(100, "C"), Pair(90, "XC"),
+            Pair(50, "L"), Pair(40, "XL"), Pair(10, "X"), Pair(9, "IX"), Pair(5, "V"), Pair(4, "IV"), Pair(1, "I"))
+    var number = n
+    val result = StringBuilder("")
+    for (element in list)
+        while (number >= element.first) {
+            result.append(element.second)
+            number -= element.first
+        }
+    return result.toString()
+}
+
+/**
+ *Вспомогательная
+ */
+fun russianHelper(n: Int, thousand: Boolean): String {
+    val hundreds = listOf("", "сто ", "двести ", "триста ", "четыреста ", "пятьсот ", "шестьсот ", "семьсот ",
+            "восемьсот ", "девятьсот ")
+    val dozens = listOf("двадцать ", "тридцать ", "сорок ", "пятьдесят ", "шестьдесят ", "семьдесят ", "восемьдесят ",
+            "девяносто ")
+    val units = listOf("", "один ", "два ", "три ", "четыре ", "пять ", "шесть ", "семь ", "восемь ", "девять ")
+    val exceptions = listOf("десять ", "одиннадцать ", "двенадцать ", "тринадцать ", "четырнадцать ", "пятнадцать ",
+            "шестнадцать ", "семнадцать ", "восемнадцать ", "девятнадцать ")
+    val result = StringBuilder("")
+    result.append(hundreds[n / 100])
+    val nDozens = n / 10 % 10
+    if (nDozens == 1)
+        result.append(exceptions[n % 10])
+    else {
+        if (nDozens > 0)
+            result.append(dozens[nDozens - 2])
+        result.append(units[n % 10])
+        }
+
+
+    if (thousand) {
+        if (n%10 == 1) result.replace(result.length-3, result.length-2, "на")
+        if (n%10 == 2) result.replace(result.length-2, result.length-1, "е")
+        val thousandEnding = when {
+            n % 100 != 11 && n % 10 == 1 -> "тысяча "
+            n % 100 !in 12..14 && n % 10 in 2..4 -> "тысячи "
+            else -> "тысяч "
+        }
+        result.append(thousandEnding)
+    }
+    return result.toString()
+}
 
 /**
  * Очень сложная
@@ -310,4 +369,13 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    val result = StringBuilder("")
+    val firstHalf = n/1000
+    val secondHalf = n%1000
+    if (firstHalf > 0)
+        result.append(russianHelper(firstHalf, true))
+    result.append(russianHelper(secondHalf, false))
+    result.deleteCharAt(result.length-1)
+    return result.toString()
+}
