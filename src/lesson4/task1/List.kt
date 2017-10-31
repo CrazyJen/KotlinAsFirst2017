@@ -349,8 +349,8 @@ fun russianHelper(n: Int, thousand: Boolean): String {
     }
 
     if (thousand) {
-        if (n % 100 != 11 && n % 10 == 1) result.replace(result.length-3, result.length-1, "на")
-        if (n % 100 != 12 && n%10 == 2) result.replace(result.length-2, result.length-1, "е")
+        if (n % 100 != 11 && n % 10 == 1) result.replace(result.length - 3, result.length - 1, "на")
+        if (n % 100 != 12 && n % 10 == 2) result.replace(result.length - 2, result.length - 1, "е")
         val thousandEnding = when {
             n % 100 != 11 && n % 10 == 1 -> "тысяча "
             n % 100 !in 12..14 && n % 10 in 2..4 -> "тысячи "
@@ -370,11 +370,11 @@ fun russianHelper(n: Int, thousand: Boolean): String {
  */
 fun russian(n: Int): String {
     val result = StringBuilder("")
-    val firstHalf = n/1000
-    val secondHalf = n%1000
+    val firstHalf = n / 1000
+    val secondHalf = n % 1000
     if (firstHalf > 0)
         result.append(russianHelper(firstHalf, true))
     result.append(russianHelper(secondHalf, false))
-    result.deleteCharAt(result.length-1)
+    result.deleteCharAt(result.length - 1)
     return result.toString()
 }
