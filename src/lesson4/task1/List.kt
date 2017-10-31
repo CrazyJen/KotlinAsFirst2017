@@ -346,12 +346,11 @@ fun russianHelper(n: Int, thousand: Boolean): String {
         if (nDozens > 0)
             result.append(dozens[nDozens - 2])
         result.append(units[n % 10])
-        }
-
+    }
 
     if (thousand) {
-        if (n%10 == 1) result.replace(result.length-3, result.length-1, "на")
-        if (n%10 == 2) result.replace(result.length-2, result.length-1, "е")
+        if (n % 100 != 11 && n % 10 == 1) result.replace(result.length-3, result.length-1, "на")
+        if (n % 100 != 12 && n%10 == 2) result.replace(result.length-2, result.length-1, "е")
         val thousandEnding = when {
             n % 100 != 11 && n % 10 == 1 -> "тысяча "
             n % 100 !in 12..14 && n % 10 in 2..4 -> "тысячи "
