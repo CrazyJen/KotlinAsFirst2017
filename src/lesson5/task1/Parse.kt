@@ -70,7 +70,7 @@ val months = listOf("января", "февраля", "марта", "апрел�
 fun dateStrToDigit(str: String): String {
     val list = str.split(" ")
     if (!str.matches(Regex("""\d?\d [а-я]+ \d+""")) || list[1] !in months) return ""
-    return String.format("%02d.%02d.%04d", list[0].toInt(), months.indexOf(list[1]) + 1, list[2].toInt())
+    return String.format("%02d.%02d.%d", list[0].toInt(), months.indexOf(list[1]) + 1, list[2].toInt())
 }
 
 
@@ -85,7 +85,7 @@ fun dateDigitToStr(digital: String): String {
     val list = digital.split(".")
     if (!digital.matches(Regex("""\d\d.\d\d.\d+""")) || list[1].toInt() !in 1..12)
         return ""
-    return String.format("%d %s %04d", list[0].toInt(), months[list[1].toInt() - 1], list[2].toInt())
+    return String.format("%d %s %d", list[0].toInt(), months[list[1].toInt() - 1], list[2].toInt())
 }
 
 /**
@@ -120,8 +120,10 @@ fun bestLongJump(jumps: String): Int {
         return -1
     var input = Regex("""[%-]""").replace(jumps, "")
     input = Regex("""( )+""").replace(input, " ")
-    val result = input.trim().split(" ").sortedDescending()
-    return result[0].toInt()
+    val inputList = input.trim().split(" ")
+    val result = mutableListOf<Int>()
+    for (element in inputList) result.add(element.toInt())
+    return result.sortedDescending()[0]
 }
 
 /**
