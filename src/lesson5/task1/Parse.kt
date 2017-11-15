@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson5.task1
 
 /**
@@ -70,7 +71,7 @@ val months = listOf("января", "февраля", "марта", "апрел�
 fun dateStrToDigit(str: String): String {
     val list = str.split(" ")
     if (!str.matches(Regex("""\d?\d [а-я]+ \d+""")) || list[1] !in months) return ""
-    return String.format("%02d.%02d.%d", list[0].toInt(), months.indexOf(list[1]) + 1, list[2].toInt())
+    return String.format("%02d.%02d.%s", list[0].toInt(), months.indexOf(list[1]) + 1, list[2])
 }
 
 
@@ -85,7 +86,7 @@ fun dateDigitToStr(digital: String): String {
     val list = digital.split(".")
     if (!digital.matches(Regex("""\d\d.\d\d.\d+""")) || list[1].toInt() !in 1..12)
         return ""
-    return String.format("%d %s %d", list[0].toInt(), months[list[1].toInt() - 1], list[2].toInt())
+    return String.format("%d %s %s", list[0].toInt(), months[list[1].toInt() - 1], list[2])
 }
 
 /**
@@ -101,7 +102,7 @@ fun dateDigitToStr(digital: String): String {
  * При неверном формате вернуть пустую строку
  */
 fun flattenPhoneNumber(phone: String): String {
-    if (phone.contains(Regex("""[^0-9()+ -]"""))) return ""
+    if (!phone.matches(Regex("""\+?[0-9() -]+"""))) return ""
     return Regex("""[() -]""").replace(phone, "")
 }
 
@@ -118,11 +119,8 @@ fun flattenPhoneNumber(phone: String): String {
 fun bestLongJump(jumps: String): Int {
     if (jumps.contains(Regex("""[^0-9% -]""")) || !jumps.contains(Regex("""[0-9]""")))
         return -1
-    var input = Regex("""[%-]""").replace(jumps, "")
-    input = Regex("""( )+""").replace(input, " ")
-    val inputList = input.trim().split(" ")
-    val result = mutableListOf<Int>()
-    for (element in inputList) result.add(element.toInt())
+    val input = Regex("""[%-] *""").replace(jumps, "")
+    val result = input.trim().split(" ").map { it.toInt() }
     return result.sortedDescending()[0]
 }
 
@@ -138,11 +136,12 @@ fun bestLongJump(jumps: String): Int {
  */
 fun bestHighJump(jumps: String): Int {
     if (!jumps.matches(Regex("""(\d+ [%+-]+ )*(\d+ [%+-]+)"""))) return -1
-    val input = jumps.split(" ")
-    for (i in input.size - 1 downTo 1 step 2)
-        if ('+' in input[i]) return input[i - 1].toInt()
-    return 0
+    var input = Regex("""\d+ [%-]+ """).replace(jumps + " ", "")
+    input = Regex(""" [^\d]+ *""").replace(input + " ", " ")
+    val inputList = input.trim().split(" ").map { it.toInt() }
+    return inputList.sortedDescending()[0]
 }
+
 
 /**
  * Сложная
@@ -194,12 +193,13 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть положительными
  */
 fun mostExpensive(description: String): String {
-    if (!description.matches(Regex("""([А-Я][а-я]+ \d+\.\d+; )*([А-Я][а-я]+ \d+\.\d+)"""))) return ""
+    if (!description.matches(Regex("""(.* \d+\.\d+; )*(.* \d+\.\d+)""")))
+        return ""
     val input = description.split("; ")
     var result = ""
     var maxCost = 0.0
     for (element in input) {
-        val name = Regex("""[А-Я][а-я]+""").find(element)!!.value
+        val name = Regex(""".* """).find(element)!!.value.trim()
         val cost = Regex("""\d+\.\d+""").find(element)!!.value.toDouble()
         if (cost > maxCost) {
             maxCost = cost
@@ -220,7 +220,24 @@ fun mostExpensive(description: String): String {
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int = TODO()
+fun fromRoman(roman: String): Int {
+    if (!roman.matches(Regex("""(M){0,3}(CM)?(D)?(CD)?(C){0,3}(XC)?(L)?(XL)?(X){0,3}(IX)?(V)?(IV)?(I){0,3}""")))
+        return -1
+    val list = listOf(Pair(4, "IV"), Pair(9, "IX"), Pair(40, "XL"), Pair(90, "XC"), Pair(400, "CD"), Pair(900, "CM"),
+            Pair(1, "I"), Pair(5, "V"), Pair(10, "X"), Pair(50, "L"), Pair(100, "C"),
+            Pair(500, "D"), Pair(1000, "M"))
+    var result = 0
+    var inputString = roman
+    for (element in list) {
+        if (element.second in inputString) {
+            val matches = Regex(element.second).findAll(inputString)
+            for (match in matches) result += element.first
+            inputString = Regex(element.second).replace(inputString, "")
+            if (inputString.isEmpty()) return result
+        }
+    }
+    return result
+}
 
 /**
  * Очень сложная
