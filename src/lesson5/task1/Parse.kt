@@ -135,7 +135,7 @@ fun bestLongJump(jumps: String): Int {
  * При нарушении формата входной строки вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    if (!jumps.matches(Regex("""(\d+ [%+-]+ )*(\d+ [%+-]+)""")) || '+' !in jumps) return -1
+    if (jumps.contains(Regex("""[^\d %+-]""")) || '+' !in jumps) return -1
     var input = Regex("""\d+ [%-]+ """).replace(jumps + " ", "")
     input = Regex(""" [^\d]+ *""").replace(input + " ", " ")
     val inputList = input.trim().split(" ").map { it.toInt() }
@@ -222,7 +222,7 @@ fun mostExpensive(description: String): String {
  */
 fun fromRoman(roman: String): Int {
     if (!roman.matches(Regex
-    ("""(M){0,3}(CM)?(D)?(CD)?(C){0,3}(XC)?(L)?(XL)?(X){0,3}(IX)?(V)?(IV)?(I){0,3}"""))
+    ("""(M)*(CM)?(D)?(CD)?(C)*(XC)?(L)?(XL)?(X)*(IX)?(V)?(IV)?(I)*"""))
             || roman.isEmpty())
         return -1
     val list = listOf(Pair(4, "IV"), Pair(9, "IX"), Pair(40, "XL"), Pair(90, "XC"), Pair(400, "CD"), Pair(900, "CM"),
