@@ -119,7 +119,7 @@ fun flattenPhoneNumber(phone: String): String {
 fun bestLongJump(jumps: String): Int {
     if (jumps.contains(Regex("""[^0-9% -]""")) || !jumps.contains(Regex("""[0-9]""")))
         return -1
-    val input = Regex("""[%-] *""").replace(jumps, "")
+    val input = Regex("""[% -]+""").replace(jumps, " ")
     val result = input.trim().split(" ").map { it.toInt() }
     return result.sortedDescending()[0]
 }
@@ -135,7 +135,7 @@ fun bestLongJump(jumps: String): Int {
  * При нарушении формата входной строки вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    if (!jumps.matches(Regex("""(\d+ [%+-]+ )*(\d+ [%+-]+)"""))) return -1
+    if (!jumps.matches(Regex("""(\d+ [%+-]+ )*(\d+ [%+-]+)""")) || '+' !in jumps) return -1
     var input = Regex("""\d+ [%-]+ """).replace(jumps + " ", "")
     input = Regex(""" [^\d]+ *""").replace(input + " ", " ")
     val inputList = input.trim().split(" ").map { it.toInt() }
@@ -221,7 +221,9 @@ fun mostExpensive(description: String): String {
  * Вернуть -1, если roman не является корректным римским числом
  */
 fun fromRoman(roman: String): Int {
-    if (!roman.matches(Regex("""(M){0,3}(CM)?(D)?(CD)?(C){0,3}(XC)?(L)?(XL)?(X){0,3}(IX)?(V)?(IV)?(I){0,3}""")))
+    if (!roman.matches(Regex
+    ("""(M){0,3}(CM)?(D)?(CD)?(C){0,3}(XC)?(L)?(XL)?(X){0,3}(IX)?(V)?(IV)?(I){0,3}"""))
+            || roman.isEmpty())
         return -1
     val list = listOf(Pair(4, "IV"), Pair(9, "IX"), Pair(40, "XL"), Pair(90, "XC"), Pair(400, "CD"), Pair(900, "CM"),
             Pair(1, "I"), Pair(5, "V"), Pair(10, "X"), Pair(50, "L"), Pair(100, "C"),
