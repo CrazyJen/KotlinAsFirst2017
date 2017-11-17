@@ -102,7 +102,7 @@ fun dateDigitToStr(digital: String): String {
  * При неверном формате вернуть пустую строку
  */
 fun flattenPhoneNumber(phone: String): String {
-    if (!phone.matches(Regex("""\+?[0-9() -]+"""))) return ""
+    if (!phone.matches(Regex(""" *(\+\d+)?[ -]*(\(\d+\))?[\d -]*"""))) return ""
     return Regex("""[() -]""").replace(phone, "")
 }
 
@@ -193,14 +193,14 @@ fun firstDuplicateIndex(str: String): Int {
  * Все цены должны быть положительными
  */
 fun mostExpensive(description: String): String {
-    if (!description.matches(Regex("""(.* \d+\.\d+; )*(.* \d+\.\d+)""")))
+    if (!description.matches(Regex("""(.* \d+(\.\d+)?; )*(.* \d+(\.\d+)?)""")))
         return ""
     val input = description.split("; ")
     var result = ""
     var maxCost = 0.0
     for (element in input) {
         val name = Regex(""".* """).find(element)!!.value.trim()
-        val cost = Regex("""\d+\.\d+""").find(element)!!.value.toDouble()
+        val cost = Regex("""\d+(\.\d+)?""").find(element)!!.value.toDouble()
         if (cost > maxCost) {
             maxCost = cost
             result = name
@@ -225,12 +225,12 @@ fun fromRoman(roman: String): Int {
     ("""(M)*(CM)?(D)?(CD)?(C)*(XC)?(L)?(XL)?(X)*(IX)?(V)?(IV)?(I)*"""))
             || roman.isEmpty())
         return -1
-    val list = listOf(Pair(4, "IV"), Pair(9, "IX"), Pair(40, "XL"), Pair(90, "XC"), Pair(400, "CD"), Pair(900, "CM"),
+    val romanNumbers = listOf(Pair(4, "IV"), Pair(9, "IX"), Pair(40, "XL"), Pair(90, "XC"), Pair(400, "CD"), Pair(900, "CM"),
             Pair(1, "I"), Pair(5, "V"), Pair(10, "X"), Pair(50, "L"), Pair(100, "C"),
             Pair(500, "D"), Pair(1000, "M"))
     var result = 0
     var inputString = roman
-    for (element in list) {
+    for (element in romanNumbers) {
         if (element.second in inputString) {
             val matches = Regex(element.second).findAll(inputString)
             for (match in matches) result += element.first
