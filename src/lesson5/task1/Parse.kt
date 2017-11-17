@@ -202,7 +202,7 @@ fun mostExpensive(description: String): String {
         val matches = Regex("""(.*) (\d+(\.\d+)?)""").find(element)!!.groupValues
         val name = matches[1]
         val cost = matches[2].toDouble()
-        if (cost > maxCost) {
+        if (cost >= maxCost) {
             maxCost = cost
             result = name
         }
