@@ -199,8 +199,9 @@ fun mostExpensive(description: String): String {
     var result = ""
     var maxCost = 0.0
     for (element in input) {
-        val name = Regex(""".* """).find(element)!!.value.trim()
-        val cost = Regex("""\d+(\.\d+)?""").find(element)!!.value.toDouble()
+        val matches = Regex("""(.*) (\d+(\.\d+)?)""").find(element)!!.groupValues
+        val name = matches[1]
+        val cost = matches[2].toDouble()
         if (cost > maxCost) {
             maxCost = cost
             result = name
@@ -222,8 +223,7 @@ fun mostExpensive(description: String): String {
  */
 fun fromRoman(roman: String): Int {
     if (!roman.matches(Regex
-    ("""(M)*(CM)?(D)?(CD)?(C)*(XC)?(L)?(XL)?(X)*(IX)?(V)?(IV)?(I)*"""))
-            || roman.isEmpty())
+    ("""(M)*(CM)?(D)?(CD)?(C)*(XC)?(L)?(XL)?(X)*(IX)?(V)?(IV)?(I)*""")))
         return -1
     val romanNumbers = listOf(Pair(4, "IV"), Pair(9, "IX"), Pair(40, "XL"), Pair(90, "XC"), Pair(400, "CD"), Pair(900, "CM"),
             Pair(1, "I"), Pair(5, "V"), Pair(10, "X"), Pair(50, "L"), Pair(100, "C"),
