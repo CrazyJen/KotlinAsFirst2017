@@ -169,7 +169,7 @@ class Line private constructor(val b: Double, val angle: Double) {
  * Построить прямую по отрезку
  */
 fun lineBySegment(s: Segment): Line {
-    val angle = Math.acos((s.begin.x - s.end.x) / s.begin.distance(s.end)) % Math.PI
+    val angle = Math.acos((s.end.x - s.begin.x) / s.begin.distance(s.end)) % Math.PI
     return Line(s.begin, angle)
 }
 
@@ -178,7 +178,7 @@ fun lineBySegment(s: Segment): Line {
  *
  * Построить прямую по двум точкам
  */
-fun lineByPoints(a: Point, b: Point): Line = TODO()
+fun lineByPoints(a: Point, b: Point): Line = lineBySegment(Segment(a, b))
 
 /**
  * Сложная
