@@ -125,8 +125,8 @@ fun diameter(vararg points: Point): Segment {
  * Центр её должен находиться посередине между точками, а радиус составлять половину расстояния между ними
  */
 fun circleByDiameter(diameter: Segment): Circle {
-    val center = Point(Math.abs((diameter.begin.x - diameter.end.x)) / 2.0,
-            Math.abs((diameter.begin.y - diameter.end.y)) / 2.0)
+    val center = Point((diameter.begin.x + diameter.end.x) / 2.0,
+            (diameter.begin.y + diameter.end.y) / 2.0)
     val radius = diameter.begin.distance(diameter.end) / 2.0
     return Circle(center, radius)
 }
@@ -168,7 +168,10 @@ class Line private constructor(val b: Double, val angle: Double) {
  *
  * Построить прямую по отрезку
  */
-fun lineBySegment(s: Segment): Line = TODO()
+fun lineBySegment(s: Segment): Line {
+    val angle = Math.acos((s.begin.x - s.end.x) / s.begin.distance(s.end)) % Math.PI
+    return Line(s.begin, angle)
+}
 
 /**
  * Средняя
