@@ -225,9 +225,9 @@ fun fromRoman(roman: String): Int {
     if (!roman.matches(Regex
     ("""(M)*(CM)?(D)?(CD)?(C)*(XC)?(L)?(XL)?(X)*(IX)?(V)?(IV)?(I)*""")) || roman.isEmpty())
         return -1
-    val romanNumbers = listOf(Pair(4, "IV"), Pair(9, "IX"), Pair(40, "XL"), Pair(90, "XC"), Pair(400, "CD"), Pair(900, "CM"),
-            Pair(1, "I"), Pair(5, "V"), Pair(10, "X"), Pair(50, "L"), Pair(100, "C"),
-            Pair(500, "D"), Pair(1000, "M"))
+    val romanNumbers = listOf(Pair(4, "IV"), Pair(9, "IX"), Pair(40, "XL"), Pair(90, "XC"),
+            Pair(400, "CD"), Pair(900, "CM"), Pair(1, "I"), Pair(5, "V"), Pair(10, "X"), Pair(50, "L"),
+            Pair(100, "C"), Pair(500, "D"), Pair(1000, "M"))
     var result = 0
     var inputString = roman
     for (element in romanNumbers) {
