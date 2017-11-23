@@ -3,6 +3,7 @@
 package lesson6.task1
 
 import lesson1.task1.sqr
+import java.lang.Math.*
 
 /**
  * Точка на плоскости
@@ -150,7 +151,19 @@ class Line private constructor(val b: Double, val angle: Double) {
      * Найти точку пересечения с другой линией.
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
-    fun crossPoint(other: Line): Point = TODO()
+    fun crossPoint(other: Line): Point {
+        val yCoord = when {
+            this.angle == 0.0 -> this.b
+            other.angle == 0.0 -> other.b
+            this.angle == PI / 2 -> (this.b - (other.b * sin(this.angle)) / sin(other.angle)) /
+                    (cos(this.angle) - sin(this.angle) / tan(other.angle))
+            else -> (other.b - (this.b * sin(other.angle)) / sin(this.angle)) /
+                    (cos(other.angle) - sin(other.angle) / tan(this.angle))
+        }
+        val xCoord = if (this.angle == 0.0) (yCoord * cos(other.angle) - other.b) / sin(other.angle)
+        else (yCoord * cos(this.angle) - this.b) / sin(this.angle)
+        return Point(xCoord, yCoord)
+    }
 
     override fun equals(other: Any?) = other is Line && angle == other.angle && b == other.b
 
@@ -169,7 +182,7 @@ class Line private constructor(val b: Double, val angle: Double) {
  * Построить прямую по отрезку
  */
 fun lineBySegment(s: Segment): Line {
-    val angle = Math.acos((s.end.x - s.begin.x) / s.begin.distance(s.end)) % Math.PI
+    val angle = atan((s.end.y - s.begin.y) / (s.end.x - s.begin.x)) % PI
     return Line(s.begin, angle)
 }
 
@@ -185,7 +198,12 @@ fun lineByPoints(a: Point, b: Point): Line = lineBySegment(Segment(a, b))
  *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
-fun bisectorByPoints(a: Point, b: Point): Line = TODO()
+fun bisectorByPoints(a: Point, b: Point): Line = when {
+    (a.y == b.y) -> Line(Point((a.x + b.x) / 2, (a.y + b.y) / 2), PI / 2)
+    (a.x == b.x) -> Line(Point((a.x + b.x) / 2, (a.y + b.y) / 2), 0.0)
+    else -> Line(Point((a.x + b.x) / 2, (a.y + b.y) / 2),
+            atan((b.y - a.y) / (b.x - a.x)))
+}
 
 /**
  * Средняя
