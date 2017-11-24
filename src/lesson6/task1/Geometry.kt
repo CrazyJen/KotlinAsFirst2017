@@ -111,7 +111,7 @@ fun diameter(vararg points: Point): Segment {
     if (input.size < 2) throw IllegalArgumentException("Недостаточно точек")
     var result = Segment(input[0], input[1])
     for (point in input) {
-        for (i in input.indexOf(point)..input.size - 1) {
+        for (i in input.indexOf(point) + 1..input.size - 1) {
             if (point.distance(input[i]) > result.begin.distance(result.end))
                 result = Segment(point, input[i])
         }
@@ -182,8 +182,11 @@ class Line private constructor(val b: Double, val angle: Double) {
  * Построить прямую по отрезку
  */
 fun lineBySegment(s: Segment): Line {
-    val angle = atan((s.end.y - s.begin.y) / (s.end.x - s.begin.x)) % PI
-    return Line(s.begin, angle)
+    val endCoordY = maxOf(s.begin.y, s.end.y)
+    val segment = if (endCoordY == s.begin.y) Segment(s.end, s.begin)
+                    else  s
+    val angle = acos((segment.end.x - segment.begin.x)/(s.begin.distance(s.end))) % PI
+    return Line(segment.begin, angle)
 }
 
 /**
@@ -198,11 +201,15 @@ fun lineByPoints(a: Point, b: Point): Line = lineBySegment(Segment(a, b))
  *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
-fun bisectorByPoints(a: Point, b: Point): Line = when {
-    (a.y == b.y) -> Line(Point((a.x + b.x) / 2, (a.y + b.y) / 2), PI / 2)
-    (a.x == b.x) -> Line(Point((a.x + b.x) / 2, (a.y + b.y) / 2), 0.0)
-    else -> Line(Point((a.x + b.x) / 2, (a.y + b.y) / 2),
-            atan((b.y - a.y) / (b.x - a.x)))
+fun bisectorByPoints(a: Point, b: Point): Line {
+    val segmentAngle = lineByPoints(a, b).angle
+    val angle = when {
+        (a.y == b.y) -> PI / 2
+        (a.x == b.x) -> 0.0
+        segmentAngle > PI / 2 -> segmentAngle - PI / 2
+        else -> segmentAngle + PI / 2
+    }
+    return Line(Point((a.x + b.x) / 2, (a.y + b.y) / 2), angle)
 }
 
 /**
@@ -211,7 +218,17 @@ fun bisectorByPoints(a: Point, b: Point): Line = when {
  * Задан список из n окружностей на плоскости. Найти пару наименее удалённых из них.
  * Если в списке менее двух окружностей, бросить IllegalArgumentException
  */
-fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
+fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
+    val input = circles.toList()
+    if (input.size < 2) throw IllegalArgumentException()
+    var result = Pair(input[0], input[1])
+    for (circle in input)
+        for (i in input.indexOf(circle) + 1..input.size - 1) {
+            if (circle.distance(input[i]) < result.first.distance(result.second))
+                result = Pair(circle, input[i])
+        }
+    return result
+}
 
 /**
  * Сложная
@@ -222,7 +239,11 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> = TODO()
  * (построить окружность по трём точкам, или
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
-fun circleByThreePoints(a: Point, b: Point, c: Point): Circle = TODO()
+fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
+    val center = bisectorByPoints(a,b).crossPoint(bisectorByPoints(b,c))
+    val radius = center.distance(a)
+    return Circle(center, radius)
+}
 
 /**
  * Очень сложная
