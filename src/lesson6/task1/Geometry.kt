@@ -241,7 +241,7 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
  */
 fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
     val center = bisectorByPoints(a,b).crossPoint(bisectorByPoints(b,c))
-    val radius = center.distance(a)
+    val radius = (center.distance(a) + center.distance(b) + center.distance(c))/3
     return Circle(center, radius)
 }
 
@@ -257,7 +257,10 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
  * соединяющий две самые удалённые точки в данном множестве.
  */
 fun minContainingCircle(vararg points: Point): Circle {
-    val input = points.toList()
+    val input = points.toMutableList()
+    for (i in 0..input.size-2)
+        for (j in i+1..input.size-1)
+            if (input[j] == input[i]) input.removeAt(j)
     var result : Triangle
     when (input.size) {
         0 -> throw IllegalArgumentException()
