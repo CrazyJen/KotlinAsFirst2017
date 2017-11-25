@@ -86,7 +86,7 @@ data class Circle(val center: Point, val radius: Double) {
      *
      * Вернуть true, если и только если окружность содержит данную точку НА себе или ВНУТРИ себя
      */
-    fun contains(p: Point): Boolean = this.center.distance(p) <= this.radius
+    fun contains(p: Point): Boolean = abs(this.center.distance(p)) - this.radius < 1e-5
 }
 
 /**
@@ -256,5 +256,22 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
  * три точки данного множества, либо иметь своим диаметром отрезок,
  * соединяющий две самые удалённые точки в данном множестве.
  */
-fun minContainingCircle(vararg points: Point): Circle = TODO()
-
+fun minContainingCircle(vararg points: Point): Circle {
+    val input = points.toList()
+    var result : Triangle
+    when (input.size) {
+        0 -> throw IllegalArgumentException()
+        1 -> return Circle(input[0], 0.0)
+        2 -> return circleByDiameter(Segment(input[0], input[1]))
+        3 -> return circleByThreePoints(input[0], input[1], input[2])
+        else -> result = Triangle(input[0], input[1], input[2])
+    }
+    for (point in input)
+        for (i in input.indexOf(point)+1..input.size-2)
+            for (j in i+1..input.size-1) {
+                val triangle = Triangle(point, input[i], input[j])
+                if (result.halfPerimeter() < triangle.halfPerimeter())
+                    result = triangle
+            }
+    return circleByThreePoints(result.a, result.b, result.c)
+}
