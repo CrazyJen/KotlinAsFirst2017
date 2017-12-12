@@ -258,14 +258,15 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
  */
 fun minContainingCircle(vararg points: Point): Circle {
     val input = points.toSet().toTypedArray() //Для удаления повторяющихся точек
-    val diameter = diameter(*input)
+    val diameter: Segment
     val result: Circle
     when (input.size) {
         0 -> throw IllegalArgumentException()
         1 -> return Circle(input[0], 0.0)
         2 -> return circleByDiameter(Segment(input[0], input[1]))
         3 -> return circleByThreePoints(input[0], input[1], input[2])
-        else -> result = circleByDiameter(diameter)
+        else -> {diameter = diameter(*input)
+            result = circleByDiameter(diameter)}
     }
     var maxDistance = 0.0
     var maxRemotePoint = result.center
