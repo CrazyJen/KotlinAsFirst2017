@@ -151,14 +151,14 @@ fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> {
     val result = createMatrix(matrix.height, matrix.width, 0)
     for (i in 0 until matrix.height)
         for (j in 0 until matrix.width) {
-            result[i, j] += if (i+1 in 0 until matrix.height && j-1 in 0 until matrix.width) matrix[i+1, j-1] else 0
-            result[i, j] += if (i+1 in 0 until matrix.height) matrix[i+1, j] else 0
-            result[i, j] += if (i+1 in 0 until matrix.height && j+1 in 0 until matrix.width) matrix[i+1, j+1] else 0
-            result[i, j] += if (j-1 in 0 until matrix.width) matrix[i, j-1] else 0
-            result[i, j] += if (j+1 in 0 until matrix.width) matrix[i, j+1] else 0
-            result[i, j] += if (i-1 in 0 until matrix.height && j-1 in 0 until matrix.width) matrix[i-1, j-1] else 0
-            result[i, j] += if (i-1 in 0 until matrix.height) matrix[i-1, j] else 0
-            result[i, j] += if (i-1 in 0 until matrix.height && j+1 in 0 until matrix.width) matrix[i-1, j+1] else 0
+            result[i, j] += if (i + 1 in 0 until matrix.height && j - 1 in 0 until matrix.width) matrix[i + 1, j - 1] else 0
+            result[i, j] += if (i + 1 in 0 until matrix.height) matrix[i + 1, j] else 0
+            result[i, j] += if (i + 1 in 0 until matrix.height && j + 1 in 0 until matrix.width) matrix[i + 1, j + 1] else 0
+            result[i, j] += if (j - 1 in 0 until matrix.width) matrix[i, j - 1] else 0
+            result[i, j] += if (j + 1 in 0 until matrix.width) matrix[i, j + 1] else 0
+            result[i, j] += if (i - 1 in 0 until matrix.height && j - 1 in 0 until matrix.width) matrix[i - 1, j - 1] else 0
+            result[i, j] += if (i - 1 in 0 until matrix.height) matrix[i - 1, j] else 0
+            result[i, j] += if (i - 1 in 0 until matrix.height && j + 1 in 0 until matrix.width) matrix[i - 1, j + 1] else 0
         }
     return result
 }
@@ -200,6 +200,7 @@ data class Holes(val rows: List<Int>, val columns: List<Int>)
  * К примеру, центральный элемент 12 = 1 + 2 + 4 + 5, элемент в левом нижнем углу 12 = 1 + 4 + 7 и так далее.
  */
 fun sumSubMatrix(matrix: Matrix<Int>): Matrix<Int> = TODO()
+
 /**
  * Сложная
  *

@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED_PARAMETER", "unused")
+
 package lesson7.task1
 
 /**
@@ -21,6 +22,7 @@ interface Matrix<E> {
      * Методы могут бросить исключение, если ячейка не существует или пуста
      */
     operator fun get(row: Int, column: Int): E
+
     operator fun get(cell: Cell): E
 
     /**
@@ -28,6 +30,7 @@ interface Matrix<E> {
      * Методы могут бросить исключение, если ячейка не существует
      */
     operator fun set(row: Int, column: Int, value: E)
+
     operator fun set(cell: Cell, value: E)
 }
 
@@ -43,7 +46,7 @@ fun <E> createMatrix(height: Int, width: Int, e: E): Matrix<E> {
     val result = MatrixImpl<E>(height, width)
     for (i in 0 until height)
         for (j in 0 until width)
-            result[i,j] = e
+            result[i, j] = e
     return result
 }
 
@@ -52,11 +55,11 @@ fun <E> createMatrix(height: Int, width: Int, e: E): Matrix<E> {
  *
  * Реализация интерфейса "матрица"
  */
-class MatrixImpl<E> (override val height: Int, override val width: Int): Matrix<E> {
+class MatrixImpl<E>(override val height: Int, override val width: Int) : Matrix<E> {
     val matrix = mutableMapOf<Cell, E>()
-    override fun get(row: Int, column: Int): E  = matrix[Cell(row, column)]!!
+    override fun get(row: Int, column: Int): E = matrix[Cell(row, column)]!!
 
-    override fun get(cell: Cell): E  = get(cell.row, cell.column)
+    override fun get(cell: Cell): E = get(cell.row, cell.column)
 
     override fun set(row: Int, column: Int, value: E) {
         matrix[Cell(row, column)] = value
@@ -70,9 +73,9 @@ class MatrixImpl<E> (override val height: Int, override val width: Int): Matrix<
     override fun toString(): String {
         val result = StringBuilder()
         result.append('[')
-        for(i in 0 until height) {
+        for (i in 0 until height) {
             result.append("[")
-            for(j in 0 until width) {
+            for (j in 0 until width) {
                 result.append(matrix[Cell(i, j)].toString())
                 result.append(", ")
             }
@@ -80,6 +83,12 @@ class MatrixImpl<E> (override val height: Int, override val width: Int): Matrix<
         }
         result.append("]")
         return result.toString()
+    }
+    override fun hashCode(): Int {
+        var result = height
+        result = 31 * result + width
+        result = 31 * result + matrix.hashCode()
+        return result
     }
 }
 
