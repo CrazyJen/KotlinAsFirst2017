@@ -155,19 +155,13 @@ class Line private constructor(val b: Double, val angle: Double) {
         val yCoord: Double
         val xCoord: Double
         when {
-            abs(this.angle - PI / 2) <= 1e-15 -> {
-                xCoord = -this.b
-                yCoord = xCoord * sin(other.angle) / cos(other.angle) + other.b / cos(other.angle)
-            }
-            abs(other.angle - PI / 2) <= 1e-15 -> {
-                xCoord = -other.b
-                yCoord = xCoord * sin(angle) / cos(angle) + b / cos(angle)
-            }
-            else -> {
-                xCoord = (other.b / cos(other.angle) - b / cos(angle)) /
-                        (sin(angle) / cos(angle) - sin(other.angle) / cos(other.angle))
-                yCoord = xCoord * sin(angle) / cos(angle) + b / cos(angle)
-            }
+            abs(this.angle - PI / 2) <= 1e-15 -> {xCoord = -this.b
+                yCoord = xCoord * sin(other.angle) / cos(other.angle) + other.b / cos(other.angle)}
+            abs(other.angle - PI / 2) <= 1e-15 -> {xCoord = -other.b
+                yCoord = xCoord * sin(angle) / cos(angle) + b / cos(angle)}
+            else -> {xCoord = (other.b / cos(other.angle) - b / cos(angle)) /
+                    (sin(angle) / cos(angle) - sin(other.angle) / cos(other.angle))
+            yCoord = xCoord * sin(angle) / cos(angle) + b / cos(angle)}
         }
 
         return Point(xCoord, yCoord)
@@ -212,6 +206,7 @@ fun lineByPoints(a: Point, b: Point): Line = lineBySegment(Segment(a, b))
 fun bisectorByPoints(a: Point, b: Point): Line {
     val segmentAngle = lineByPoints(a, b).angle
     val angle = when {
+        (abs(a.y - b.y) <= 1e-15) -> PI / 2
         (abs(a.x - b.x) <= 1e-15) -> 0.0
         segmentAngle > PI / 2 -> segmentAngle - PI / 2
         else -> segmentAngle + PI / 2
