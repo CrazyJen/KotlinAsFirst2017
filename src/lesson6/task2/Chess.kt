@@ -1,6 +1,7 @@
 @file:Suppress("UNUSED_PARAMETER")
 
 package lesson6.task2
+import java.lang.Math.*
 
 /**
  * Клетка шахматной доски. Шахматная доска квадратная и имеет 8 х 8 клеток.
@@ -61,14 +62,13 @@ fun square(notation: String): Square {
  * Пример: rookMoveNumber(Square(3, 1), Square(6, 3)) = 2
  * Ладья может пройти через клетку (3, 3) или через клетку (6, 1) к клетке (6, 3).
  */
-fun rookMoveNumber(start: Square, end: Square): Int {
-    if (!start.inside() || !end.inside()) throw IllegalArgumentException()
-    return when {
-        start.column == end.column && start.row == end.row -> 0
-        start.column == end.column || start.row == end.row -> 1
-        else -> 2
-    }
+fun rookMoveNumber(start: Square, end: Square): Int = when {
+    (!start.inside() || !end.inside()) -> throw IllegalArgumentException()
+    start.column == end.column && start.row == end.row -> 0
+    start.column == end.column || start.row == end.row -> 1
+    else -> 2
 }
+
 
 /**
  * Средняя
@@ -116,7 +116,14 @@ fun rookTrajectory(start: Square, end: Square): List<Square> {
  * Примеры: bishopMoveNumber(Square(3, 1), Square(6, 3)) = -1; bishopMoveNumber(Square(3, 1), Square(3, 7)) = 2.
  * Слон может пройти через клетку (6, 4) к клетке (3, 7).
  */
-fun bishopMoveNumber(start: Square, end: Square): Int = TODO()
+fun bishopMoveNumber(start: Square, end: Square): Int = when {
+    !start.inside() || !end.inside() -> throw IllegalArgumentException("Клетки некорректны")
+    (start.column % 2 == start.row % 2) != (end.column % 2 == end.row % 2) -> -1
+    start.column == end.column && start.row == end.row -> 0
+    abs(start.column - end.column) == abs(start.row - end.row) -> 1
+    else -> 2
+}
+
 
 /**
  * Сложная
@@ -136,7 +143,15 @@ fun bishopMoveNumber(start: Square, end: Square): Int = TODO()
  *          bishopTrajectory(Square(1, 3), Square(6, 8)) = listOf(Square(1, 3), Square(6, 8))
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun bishopTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun bishopTrajectory(start: Square, end: Square): List<Square> {
+    if (!start.inside() || !end.inside()) throw IllegalArgumentException("Клетки некорректны")
+    return when (bishopMoveNumber(start, end)) {
+        -1 -> listOf()
+        0 -> listOf(start)
+        1 -> listOf(start, end)
+        else -> listOf(start, , end)
+    }
+}
 
 /**
  * Средняя

@@ -95,4 +95,12 @@ class Tests {
         assertEquals(874, numberRevert(478))
         assertEquals(201, numberRevert(102))
     }
+
+    @Test
+    @Tag("Easy")
+    fun uniqueColour() {
+        assertEquals(mapOf("#C0C0C0" to "Masya"), uniqueColour(listOf("Masya #C0C0C0")))
+        assertEquals(mapOf<String, String>(), uniqueColour(listOf("ЖЫВТОНЕ ЧОЧО УПЯЧКА УПЯЧКА!!!", "ШЯЧЛО ПОПЯЧТСА!!!")))
+        assertEquals(mapOf("#A0B1C6" to "Alesha", "#B1C0BB" to "Masya"), uniqueColour(listOf("Alesha #A0B1C6", "Masya #B1C0BB", "Arafsdf #C0C0C0", "Akjsjd #C0C0C0")))
+    }
 }

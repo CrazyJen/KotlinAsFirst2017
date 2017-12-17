@@ -116,3 +116,29 @@ fun accountInThreeYears(initial: Int, percent: Int): Double = initial * Math.pow
  *Необходимо вывести число, полученное из заданного перестановкой цифр в обратном порядке (например, 874).
  */
 fun numberRevert(number: Int): Int = number % 10 * 100 + number % 100 / 10 * 10 + number / 100
+
+/**
+ * Зачётная задача
+ */
+fun uniqueColour(people: List<String>): Map<String, String> {
+    for (person in people)
+        if (!person.matches(Regex("""[A-ZА-Я][a-zа-я]+ #[0-9A-F]{6}""")))
+            return mapOf()
+
+    val colours = mutableMapOf<String, MutableList<String>>()
+    val addedColours = mutableListOf<String>()
+    for (person in people) {
+        val current = Regex("""([A-ZА-Я][a-zа-я]+) (#[0-9A-F]{6})""").find(person)!!.groupValues
+        if (current[2] in addedColours) colours[current[2]]!!.add(current[1])
+            else {
+            colours += Pair(current[2], mutableListOf(current[1]))
+            addedColours.add(current[2])
+        }
+    }
+    val result = mutableMapOf<String, String>()
+    for (colour in colours) {
+        if (colour.value.size == 1)
+            result += Pair(colour.key, colour.value[0])
+    }
+    return result
+}
