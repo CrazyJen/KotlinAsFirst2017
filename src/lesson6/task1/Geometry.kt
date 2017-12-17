@@ -156,9 +156,9 @@ class Line private constructor(val b: Double, val angle: Double) {
             this.angle <= 1e-15 -> this.b
             other.angle <= 1e-15 -> other.b
             abs(this.angle - PI / 2) <= 1e-15 -> (this.b - (other.b * sin(this.angle)) / sin(other.angle)) /
-                    (cos(this.angle) - sin(this.angle) / (sin(other.angle) / cos(other.angle)))
+                    (cos(this.angle) - sin(this.angle) / tan(other.angle))
             else -> (other.b - (this.b * sin(other.angle)) / sin(this.angle)) /
-                    (cos(other.angle) - sin(other.angle) / (sin(this.angle) / cos(this.angle)))
+                    (cos(other.angle) - sin(other.angle) / tan(this.angle))
         }
         val xCoord = if (this.angle < 1e-15) (yCoord * cos(other.angle) - other.b) / sin(other.angle)
         else (yCoord * cos(this.angle) - this.b) / sin(this.angle)
