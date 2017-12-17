@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson7.task2
 
 import lesson7.task1.Matrix
@@ -103,7 +104,15 @@ fun generateSnake(height: Int, width: Int): Matrix<Int> = TODO()
  * 4 5 6      8 5 2
  * 7 8 9      9 6 3
  */
-fun <E> rotate(matrix: Matrix<E>): Matrix<E> = TODO()
+fun <E> rotate(matrix: Matrix<E>): Matrix<E> {
+    if (matrix.height != matrix.width) throw IllegalArgumentException("")
+    if (matrix.height == 1) return matrix
+    val result = createMatrix(matrix.height, matrix.width, matrix[0, 0])
+    for (i in 0 until matrix.height)
+        for (j in 0 until matrix.width)
+            result[i, j] = matrix[matrix.width - 1 - j, i]
+    return result
+}
 
 /**
  * Сложная
@@ -137,7 +146,22 @@ fun isLatinSquare(matrix: Matrix<Int>): Boolean = TODO()
  *
  * 42 ===> 0
  */
-fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> = TODO()
+fun sumNeighbours(matrix: Matrix<Int>): Matrix<Int> {
+    if (matrix.height == 1) return createMatrix(1, 1, 0)
+    val result = createMatrix(matrix.height, matrix.width, 0)
+    for (i in 0 until matrix.height)
+        for (j in 0 until matrix.width) {
+            result[i, j] += if (i+1 in 0 until matrix.height && j-1 in 0 until matrix.width) matrix[i+1, j-1] else 0
+            result[i, j] += if (i+1 in 0 until matrix.height) matrix[i+1, j] else 0
+            result[i, j] += if (i+1 in 0 until matrix.height && j+1 in 0 until matrix.width) matrix[i+1, j+1] else 0
+            result[i, j] += if (j-1 in 0 until matrix.width) matrix[i, j-1] else 0
+            result[i, j] += if (j+1 in 0 until matrix.width) matrix[i, j+1] else 0
+            result[i, j] += if (i-1 in 0 until matrix.height && j-1 in 0 until matrix.width) matrix[i-1, j-1] else 0
+            result[i, j] += if (i-1 in 0 until matrix.height) matrix[i-1, j] else 0
+            result[i, j] += if (i-1 in 0 until matrix.height && j+1 in 0 until matrix.width) matrix[i-1, j+1] else 0
+        }
+    return result
+}
 
 /**
  * Средняя
