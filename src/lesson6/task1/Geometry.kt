@@ -265,8 +265,10 @@ fun minContainingCircle(vararg points: Point): Circle {
         1 -> return Circle(input[0], 0.0)
         2 -> return circleByDiameter(Segment(input[0], input[1]))
         3 -> return circleByThreePoints(input[0], input[1], input[2])
-        else -> {diameter = diameter(*input)
-            result = circleByDiameter(diameter)}
+        else -> {
+            diameter = diameter(*input)
+            result = circleByDiameter(diameter)
+        }
     }
     var maxDistance = 0.0
     var maxRemotePoint = result.center
