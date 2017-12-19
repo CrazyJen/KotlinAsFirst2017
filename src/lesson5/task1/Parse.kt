@@ -243,7 +243,7 @@ fun fromRoman(roman: String): Int {
 
 /**
  * Очень сложная
- *13039580
+ *
  * Имеется специальное устройство, представляющее собой
  * конвейер из cells ячеек (нумеруются от 0 до cells - 1 слева направо) и датчик, двигающийся над этим конвейером.
  * Строка commands содержит последовательность команд, выполняемых данным устройством, например +>+>+>+>+
@@ -306,13 +306,13 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
                 currentCommand++
             }
             '[' -> {
-                currentCommand = if (result[currentPosition] != 0)
-                    impossibleHelper(commands, currentCommand)
+                currentCommand = if (result[currentPosition] == 0)
+                    impossibleHelper(commands, currentCommand, true)
                 else currentCommand + 1
             }
             ']' -> {
                 currentCommand = if (result[currentPosition] != 0)
-                    commands.substring(0 until currentPosition).lastIndexOf('[') + 1
+                    impossibleHelper(commands, currentCommand, false)
                 else currentCommand + 1
             }
             else -> currentCommand++
@@ -326,16 +326,21 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
 /**
  * Вспомогательная
  */
-fun impossibleHelper(commands: String, currentCommand: Int): Int {
-    var result = commands.substring(currentCommand until commands.length).indexOf(']')
-    var subCommands = commands.substring(currentCommand..result)
-    var openCount = Regex("""\[""").findAll(subCommands).count()
-    var closeCount = Regex("""\]""").findAll(subCommands).count()
-    while (openCount != closeCount) {
-        result = commands.substring(result +1 until commands.length).indexOf(']')
-        subCommands = commands.substring(currentCommand..result)
-        openCount = Regex("""\[""").findAll(subCommands).count()
-        closeCount = Regex("""\]""").findAll(subCommands).count()
+fun impossibleHelper(commands: String, currentCommand: Int, type: Boolean): Int {
+    var openCount = 0
+    var closeCount = 0
+    if (type) {
+        for (i in currentCommand until commands.length) {
+            if (commands[i] == '[') openCount++
+            else if (commands[i] == ']') closeCount++
+            if (openCount == closeCount) return i + 1
+        }
+    } else {
+        for (i in currentCommand downTo 0) {
+            if (commands[i] == '[') openCount++
+            else if (commands[i] == ']') closeCount++
+            if (openCount == closeCount) return i + 1
+        }
     }
-    return result + 1
+    return currentCommand+1
 }
