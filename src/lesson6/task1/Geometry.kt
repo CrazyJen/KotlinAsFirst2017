@@ -86,7 +86,7 @@ data class Circle(val center: Point, val radius: Double) {
      *
      * Вернуть true, если и только если окружность содержит данную точку НА себе или ВНУТРИ себя
      */
-    fun contains(p: Point): Boolean = this.center.distance(p) - this.radius <= 1e-15
+    fun contains(p: Point): Boolean = this.center.distance(p) <= this.radius
 }
 
 /**
@@ -155,7 +155,7 @@ class Line private constructor(val b: Double, val angle: Double) {
         val yCoord: Double
         val xCoord: Double
         when {
-            abs(this.angle - PI / 2) <= 1e-15 -> {xCoord = -this.b
+            abs(angle - PI / 2) <= 1e-15 -> {xCoord = -b
                 yCoord = xCoord * sin(other.angle) / cos(other.angle) + other.b / cos(other.angle)}
             abs(other.angle - PI / 2) <= 1e-15 -> {xCoord = -other.b
                 yCoord = xCoord * sin(angle) / cos(angle) + b / cos(angle)}
@@ -205,12 +205,9 @@ fun lineByPoints(a: Point, b: Point): Line = lineBySegment(Segment(a, b))
  */
 fun bisectorByPoints(a: Point, b: Point): Line {
     val segmentAngle = lineByPoints(a, b).angle
-    val angle = when {
-        (abs(a.y - b.y) <= 1e-15) -> PI / 2
-        (abs(a.x - b.x) <= 1e-15) -> 0.0
-        segmentAngle > PI / 2 -> segmentAngle - PI / 2
-        else -> segmentAngle + PI / 2
-    }
+    val angle = if (segmentAngle >= PI / 2) segmentAngle - PI / 2
+        else segmentAngle + PI / 2
+
     return Line(Point((a.x + b.x) / 2, (a.y + b.y) / 2), angle)
 }
 
@@ -266,7 +263,6 @@ fun minContainingCircle(vararg points: Point): Circle {
         0 -> throw IllegalArgumentException()
         1 -> return Circle(input[0], 0.0)
         2 -> return circleByDiameter(Segment(input[0], input[1]))
-        3 -> return circleByThreePoints(input[0], input[1], input[2])
         else -> {
             diameter = diameter(*input)
             result = circleByDiameter(diameter)
@@ -276,7 +272,7 @@ fun minContainingCircle(vararg points: Point): Circle {
     var maxRemotePoint = result.center
 
     for (point in input) {
-        if (!result.contains(point)) {
+        if (point != diameter.begin && point != diameter.end && !result.contains(point)) {
             val currentDistance = point.distance(result.center)
             if (currentDistance > maxDistance) {
                 maxDistance = currentDistance

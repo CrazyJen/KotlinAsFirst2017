@@ -243,7 +243,7 @@ fun fromRoman(roman: String): Int {
 
 /**
  * Очень сложная
- *
+ *13039580
  * Имеется специальное устройство, представляющее собой
  * конвейер из cells ячеек (нумеруются от 0 до cells - 1 слева направо) и датчик, двигающийся над этим конвейером.
  * Строка commands содержит последовательность команд, выполняемых данным устройством, например +>+>+>+>+
@@ -277,4 +277,65 @@ fun fromRoman(roman: String): Int {
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    if (commands.contains(Regex("""[^-+><\[\] ]""")) ||
+            commands.indexOf(']') < commands.indexOf('[') ||
+            commands.lastIndexOf('[') > commands.lastIndexOf(']') ||
+            Regex("""\[""").findAll(commands).count() != Regex("""\]""").findAll(commands).count()
+            ) throw IllegalArgumentException("Неверный формат строки commands")
+    val result = MutableList(cells) { 0 }
+    var currentPosition = cells / 2
+    var currentCommand = 0
+    var commandCount = 0
+    while (commandCount < limit && currentCommand < commands.length) {
+        when (commands[currentCommand]) {
+            '-' -> {
+                result[currentPosition]--
+                currentCommand++
+            }
+            '+' -> {
+                result[currentPosition]++
+                currentCommand++
+            }
+            '<' -> {
+                currentPosition--
+                currentCommand++
+            }
+            '>' -> {
+                currentPosition++
+                currentCommand++
+            }
+            '[' -> {
+                currentCommand = if (result[currentPosition] != 0)
+                    impossibleHelper(commands, currentCommand)
+                else currentCommand + 1
+            }
+            ']' -> {
+                currentCommand = if (result[currentPosition] != 0)
+                    commands.substring(0 until currentPosition).lastIndexOf('[') + 1
+                else currentCommand + 1
+            }
+            else -> currentCommand++
+        }
+        commandCount++
+        if (currentPosition !in 0 until cells) throw IllegalStateException("Выход за границы конвеера")
+    }
+    return result
+}
+
+/**
+ * Вспомогательная
+ */
+fun impossibleHelper(commands: String, currentCommand: Int): Int {
+    var result = commands.substring(currentCommand until commands.length).indexOf(']')
+    var subCommands = commands.substring(currentCommand..result)
+    var openCount = Regex("""\[""").findAll(subCommands).count()
+    var closeCount = Regex("""\]""").findAll(subCommands).count()
+    while (openCount != closeCount) {
+        result = commands.substring(result +1 until commands.length).indexOf(']')
+        subCommands = commands.substring(currentCommand..result)
+        openCount = Regex("""\[""").findAll(subCommands).count()
+        closeCount = Regex("""\]""").findAll(subCommands).count()
+    }
+    return result + 1
+}
