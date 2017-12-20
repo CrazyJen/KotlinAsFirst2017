@@ -127,7 +127,23 @@ fun <E> rotate(matrix: Matrix<E>): Matrix<E> {
  * 1 2 3
  * 3 1 2
  */
-fun isLatinSquare(matrix: Matrix<Int>): Boolean = TODO()
+fun isLatinSquare(matrix: Matrix<Int>): Boolean {
+    if (matrix.height != matrix.width) return false
+    val list = mutableListOf<Int>()
+    for (i in 1..matrix.height)
+       list.add(i)
+
+    for (i in 0 until matrix.height) {
+        val rowList = mutableListOf<Int>()
+        val columnList = mutableListOf<Int>()
+        for (j in 0 until matrix.width) {
+            rowList.add(matrix[i, j])
+            columnList.add(matrix[j, i])
+        }
+        if (columnList.sorted() != list || rowList.sorted() != list) return false
+    }
+    return true
+}
 
 /**
  * Средняя
